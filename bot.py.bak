@@ -10,8 +10,7 @@ import async_timeout
 import aioredis
 import re
 from dotenv import load_dotenv
-from PIL import Image
-
+from PIL import Image 
 
 spirit_emoji_map = {
 'Behemoth': 'SpiritEmberEyedBehemoth',
