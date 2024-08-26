@@ -99,7 +99,7 @@ class Card(models.Model):
         counter = Counter()
         for e in self.elements.split(','):
             if len(e) > 0:
-                counter[Elements[e]] = 1
+                counter[Elements[e]] += 1
         return counter
 
     def thresholds(self, elements, equiv_elements=None):

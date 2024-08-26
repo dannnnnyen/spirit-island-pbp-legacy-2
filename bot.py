@@ -5,13 +5,11 @@ import asyncio
 import datetime
 import json
 import structlog
-import asyncio
 import async_timeout
-import aioredis
 import re
 from dotenv import load_dotenv
 from PIL import Image
-
+from redis
 
 spirit_emoji_map = {
 'Behemoth': 'SpiritEmberEyedBehemoth',
@@ -94,7 +92,11 @@ def match_game_url(s):
     '573a76ed-b9ed-45b1-8e14-04bfacb90a21'
     >>> match_game_url('stuff')
     """
-    match = re.search(r'''si.bitcrafter.net/game/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})''', s)
+    GAME_URL = os.environ['GAME_URL']
+    if not GAME_URL:
+        GAME_URL = r'''si.bitcrafter.net'''
+
+    match = re.search(GAME_URL + r'''/game/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})''', s)
     if match is not None:
         return match[1]
     return None
@@ -104,7 +106,9 @@ async def updatethings(after,topic):
     if guid is not None:
         LOG.msg(f'found guid: {guid}, linking to channel: {after.id}')
         await after.send(f'Now relaying game log for {guid} to this channel. Good luck!')
-        r = requests.post(f'http://localhost:8000/api/game/{guid}/link/{after.id}')
+        r = requests.post(f'http://34.31.6.112:8000/api/game/{guid}/link/{after.id}')
+        LOG.msg(r)
+        r = requests.post(f'http://34.31.6.112:8080/api/game/{guid}/link/{after.id}')
         LOG.msg(r)
 
 @client.event
@@ -222,8 +226,8 @@ async def logger():
     await client.wait_until_ready()
     load_emojis()
 
-    redis = await aioredis.from_url("redis://localhost", decode_responses=True)
-    pubsub = redis.pubsub()
+    redis_obj = await redis.asyncio.from_url("redis://localhost", decode_responses=True)
+    pubsub = redis_obj.pubsub()
     await pubsub.psubscribe("log-relay:*")
 
     while True:
