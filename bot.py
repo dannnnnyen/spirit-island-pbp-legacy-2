@@ -106,9 +106,10 @@ async def updatethings(after,topic):
     if guid is not None:
         LOG.msg(f'found guid: {guid}, linking to channel: {after.id}')
         await after.send(f'Now relaying game log for {guid} to this channel. Good luck!')
-        r = requests.post(f'http://34.31.6.112:8000/api/game/{guid}/link/{after.id}')
+        OWN_IP = os.environ['OWN_IP']
+        r = requests.post(f'http://{OWN_IP}:8000/api/game/{guid}/link/{after.id}')
         LOG.msg(r)
-        r = requests.post(f'http://34.31.6.112:8080/api/game/{guid}/link/{after.id}')
+        r = requests.post(f'http://{OWN_IP}:8080/api/game/{guid}/link/{after.id}')
         LOG.msg(r)
 
 @client.event
