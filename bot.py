@@ -9,7 +9,7 @@ import async_timeout
 import re
 from dotenv import load_dotenv
 from PIL import Image
-from redis
+import redis
 
 spirit_emoji_map = {
 'Behemoth': 'SpiritEmberEyedBehemoth',
